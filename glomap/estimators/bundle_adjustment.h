@@ -5,6 +5,7 @@
 #include "glomap/types.h"
 
 #include <ceres/ceres.h>
+#include <colmap/estimators/manifold.h>
 
 namespace glomap {
 
