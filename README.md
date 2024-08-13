@@ -1,6 +1,6 @@
 # GLOMAP: Global Structure-from-Motion Revisited
 
-[Project page](https://lpanaf.github.io/eccv24_glomap/) | [Paper](https://demuc.de/papers/pan2024glomap.pdf) | [ Supplementary](https://demuc.de/papers/pan2024glomap_supp.pdf)
+[Project page](https://lpanaf.github.io/eccv24_glomap/) | [Paper](https://arxiv.org/pdf/2407.20219)
 ---
 
 ## About
@@ -23,7 +23,7 @@ If you use this project for your research, please cite
 
 ## Getting Started
 
-To install GLOMAP, first install [COLMAP](https://colmap.github.io/install.html#build-from-source)
+To build GLOMAP, first install [COLMAP](https://colmap.github.io/install.html#build-from-source)
 dependencies and then build GLOMAP using the following commands: 
 ```shell
 mkdir build
@@ -31,15 +31,16 @@ cd build
 cmake .. -GNinja
 ninja && ninja install
 ```
+Pre-compiled Windows binaries can be downloaded from the official
+[release page](https://github.com/colmap/glomap/releases).
+
 After installation, one can run GLOMAP by (starting from a database)
 ```shell
 glomap mapper --database_path DATABASE_PATH --output_path OUTPUT_PATH --image_path IMAGE_PATH
 ```
 For more details on the command line interface, one can type `glomap -h` or `glomap mapper -h` for help.
-To obtain a colored reconstruction, it is recommended to call
-```shell
-colmap color_extractor --image_path IMAGE  --input_path MODEL_INPUT --output_path MODEL_OUTPUT
-```
+
+We also provide a guide on improving the obtained reconstruction, which can be found [here](docs/getting_started.md)
 
 Note:
 - GLOMAP depends on two external libraries - [COLMAP](https://github.com/colmap/colmap) and [PoseLib](https://github.com/PoseLib/PoseLib).
@@ -84,6 +85,22 @@ glomap mapper \
     --output_path   ./output/south-building/sparse
 ```
 
+### Visualize and use the results
+
+The results are written out in the COLMAP sparse reconstruction format. Please
+refer to [COLMAP](https://colmap.github.io/format.html#sparse-reconstruction)
+for more details.
+
+The reconstruction can be visualized using the COLMAP GUI, for example:
+```shell
+colmap gui --import_path ./output/south-building/sparse/0
+```
+Alternatives like [rerun.io](https://rerun.io/examples/3d-reconstruction/glomap)
+also enable visualization of COLMAP and GLOMAP outputs.
+
+If you want to inspect the reconstruction programmatically, you can use
+`pycolmap` in Python or link against COLMAP's C++ library interface.
+
 ### Notes
 
 - For larger scale datasets, it is recommended to use `sequential_matcher` or
@@ -93,7 +110,7 @@ colmap sequential_matcher --database_path DATABASE_PATH
 colmap vocab_tree_matcher --database_path DATABASE_PATH --VocabTreeMatching.vocab_tree_path VOCAB_TREE_PATH
 ```
 - Alternatively, one can use
-  [hloc](https://github.com/cvg/Hierarchical-Localization/) for image retrival
+  [hloc](https://github.com/cvg/Hierarchical-Localization/) for image retrieval
   and matching with learning-based descriptors.
 
 

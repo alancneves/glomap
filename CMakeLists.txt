@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(glomap VERSION 0.0.1)
+project(glomap VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -16,6 +16,7 @@ option(FETCH_POSELIB "Whether to use PoseLib with FetchContent or with self-inst
 
 include(cmake/FindDependencies.cmake)
 
+# Propagate options to vcpkg manifest.
 if (TESTS_ENABLED)
     enable_testing()
 endif()
@@ -37,6 +38,22 @@ if(CCACHE_ENABLED)
     endif()
 else()
     message(STATUS "Disabling ccache support")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # Some fixes for the Glog library.
+    add_definitions("-DGLOG_USE_GLOG_EXPORT")
+    add_definitions("-DGLOG_NO_ABBREVIATED_SEVERITIES")
+    add_definitions("-DGL_GLEXT_PROTOTYPES")
+    add_definitions("-DNOMINMAX")
+    add_compile_options(/EHsc)
+    # Disable warning: 'initializing': conversion from 'X' to 'Y', possible loss of data
+    add_compile_options(/wd4244 /wd4267 /wd4305)
+    # Enable object level parallel builds in Visual Studio.
+    add_compile_options(/MP)
+    if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+        add_compile_options(/bigobj)
+    endif()
 endif()
 
 add_subdirectory(glomap)
