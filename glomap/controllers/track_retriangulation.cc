@@ -40,7 +40,7 @@ bool RetriangulateTracks(const TriangulatorOptions& options,
                         std::unordered_map<track_t, Track>(),
                         *reconstruction_ptr);
 
-  colmap::IncrementalMapperOptions options_colmap;
+  colmap::IncrementalPipelineOptions options_colmap;
   options_colmap.triangulation.complete_max_reproj_error =
       options.tri_complete_max_reproj_error;
   options_colmap.triangulation.merge_max_reproj_error =
